@@ -1,4 +1,5 @@
 {
     "name": "olcs/autoload",
-    "description": "OLCS optimised autoloader"
+    "description": "OLCS optimised autoloader",
+    "bin": ["bin/autoload"]
 }

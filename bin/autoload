@@ -1,0 +1,79 @@
+#!/usr/bin/env php
+<?php
+
+class AutoloadCommand
+{
+    protected $commands = array(
+        'clean' => array(
+            'description' => 'Clears the classmap cache'
+        )
+    );
+
+    public function run($arguments)
+    {
+        array_shift($arguments);
+
+        if (empty($arguments)) {
+            $this->help();
+            return;
+        }
+
+        $command = array_shift($arguments);
+
+        if ($command === 'help' || $command === '-h') {
+            $this->help();
+            return;
+        }
+
+        if (!method_exists($this, $command)) {
+            $this->output('Command not found');
+            $this->help();
+            exit;
+        }
+
+        $this->$command($arguments);
+
+        return;
+    }
+
+    protected function clean(array $args = array())
+    {
+        $file = __DIR__ . '/../../../../data/autoload/classmap.php';
+
+        if (file_exists($file)) {
+            $content = '<?php
+
+$rootPath = realpath(__DIR__ . \'/../../\');
+
+return array(
+);
+';
+            file_put_contents($file, $content);
+            $this->output('Done!');
+        } else {
+            $this->output('Classmap not found, looking here: ' . $file);
+            exit(1);
+        }
+    }
+
+    protected function help()
+    {
+        $this->output('Usage: autoload <command>');
+        $this->output();
+        $this->output('The following commands are available');
+        $this->output();
+
+        foreach ($this->commands as $command => $details) {
+            $this->output(' - ' . $command . ' : ' . $details['description']);
+        }
+    }
+
+    protected function output($message = '')
+    {
+        echo $message . "\n";
+    }
+}
+
+$command = new AutoloadCommand();
+
+$command->run($argv);

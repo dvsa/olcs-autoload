@@ -100,7 +100,8 @@ return array(';
             }
 
             $content .= '
-);';
+);
+';
             file_put_contents($rootPath . '/data/autoload/classmap.php', $content);
         }
     }
