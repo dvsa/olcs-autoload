@@ -36,7 +36,6 @@ class ClassLoader extends ComposerClassLoader
         $this->dynamicClassMap = array_merge($this->dynamicClassMap, $classMap);
     }
 
-
     /**
      * Add to the original class map
      *  then add to our own, so we know which
@@ -76,16 +75,20 @@ class ClassLoader extends ComposerClassLoader
 
     public function __destruct()
     {
+        $rootPath = realpath(__DIR__ . '/../../../');
+        $classmapFile = $rootPath . '/data/autoload/classmap.php';
+
         /**
          * This should never happen in production, only in development
          */
-        if ($this->dirtyMap) {
-            $rootPath = realpath(__DIR__ . '/../../../');
+        if ($this->dirtyMap && is_writable($classmapFile)) {
             $content = '<?php
 
 $rootPath = realpath(__DIR__ . \'/../../\');
 
 return array(';
+            ksort($this->dynamicClassMap);
+
             foreach ($this->dynamicClassMap as $class => $path) {
 
                 if (!$path) {
@@ -95,14 +98,45 @@ return array(';
                 } else {
                     $path = '\'' . $path . '\'';
                 }
-                $content .= '
-    \'' . $class . '\' => ' . $path . ',';
+                $content .= "\n" . $this->wrapLine('    \'' . $class . '\' => ' . $path . ',');
             }
 
             $content .= '
 );
 ';
-            file_put_contents($rootPath . '/data/autoload/classmap.php', $content);
+            file_put_contents($classmapFile, $content);
         }
+    }
+
+    protected function wrapLine($string) {
+
+        $newString = '';
+
+        $remainingString = $string;
+
+        if (strlen($remainingString) <= 120) {
+            $newString = $remainingString;
+        }
+
+        while (strlen($remainingString) > 120) {
+
+            $offset = 119 - strlen($remainingString);
+
+            $splitSpaceOffset = strrpos($remainingString, '/', $offset);
+
+            $lines = substr_replace($remainingString, "'\n. '/", $splitSpaceOffset, 1);
+
+            list($trimedLine, $remainingString) = explode("\n", $lines);
+
+            $newString .= $trimedLine . "\n";
+
+            $remainingString = "        " . $remainingString;
+
+            if (strlen($remainingString) < 120) {
+                $newString .= $remainingString;
+            }
+        }
+
+        return $newString;
     }
 }
