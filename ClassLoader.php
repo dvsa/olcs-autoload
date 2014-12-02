@@ -120,11 +120,11 @@ return array(';
 
         while (strlen($remainingString) > 120) {
 
-            $offset = 120 - strlen($remainingString);
+            $offset = 119 - strlen($remainingString);
 
-            $splitSpaceOffset = strrpos($remainingString, ' ', $offset);
+            $splitSpaceOffset = strrpos($remainingString, '/', $offset);
 
-            $lines = substr_replace($remainingString, "\n", $splitSpaceOffset, 1);
+            $lines = substr_replace($remainingString, "'\n. '/", $splitSpaceOffset, 1);
 
             list($trimedLine, $remainingString) = explode("\n", $lines);
 
