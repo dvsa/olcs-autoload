@@ -20,9 +20,12 @@ class Autoloader
 
         self::$loader = $loader = new \Olcs\Autoload\ClassLoader();
 
-        $includePaths = require($vendorDir . '/composer/include_paths.php');
-        array_push($includePaths, get_include_path());
-        set_include_path(join(PATH_SEPARATOR, $includePaths));
+        // Include paths only gets created when applicable
+        if (file_exists($vendorDir . '/composer/include_paths.php')) {
+            $includePaths = require($vendorDir . '/composer/include_paths.php');
+            array_push($includePaths, get_include_path());
+            set_include_path(join(PATH_SEPARATOR, $includePaths));
+        }
 
         $map = require($vendorDir . '/composer/autoload_namespaces.php');
         foreach ($map as $namespace => $path) {
