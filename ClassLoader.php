@@ -96,7 +96,9 @@ return array(';
 
             foreach ($this->dynamicClassMap as $class => $path) {
 
-                $class = addslashes($class);
+                if (substr($class, -1) === '\\') {
+                    $class .= '\\';
+                }
 
                 if (!$path) {
                     $path = 'false';
