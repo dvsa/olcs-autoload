@@ -78,6 +78,11 @@ class ClassLoader extends ComposerClassLoader
         $rootPath = realpath(__DIR__ . '/../../../');
         $classmapFile = $rootPath . '/data/autoload/classmap.php';
 
+        if (is_writable($rootPath . '/data/autoload/') && !file_exists($classmapFile)) {
+            touch($classmapFile);
+            chmod($classmapFile, 0777);
+        }
+
         /**
          * This should never happen in production, only in development
          */
