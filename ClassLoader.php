@@ -96,6 +96,8 @@ return array(';
 
             foreach ($this->dynamicClassMap as $class => $path) {
 
+                $class = addslashes($class);
+
                 if (!$path) {
                     $path = 'false';
                 } elseif (strstr($path, $rootPath)) {
