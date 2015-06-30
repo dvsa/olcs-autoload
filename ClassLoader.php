@@ -107,7 +107,7 @@ return array(';
                 } else {
                     $path = '\'' . $path . '\'';
                 }
-                $content .= "\n" . $this->wrapLine('    \'' . $class . '\' => ' . $path . ',');
+                $content .= "\n" . '    \'' . $class . '\' => ' . $path . ',';
             }
 
             $content .= '
@@ -115,37 +115,5 @@ return array(';
 ';
             file_put_contents($classmapFile, $content);
         }
-    }
-
-    protected function wrapLine($string) {
-
-        $newString = '';
-
-        $remainingString = $string;
-
-        if (strlen($remainingString) <= 120) {
-            $newString = $remainingString;
-        }
-
-        while (strlen($remainingString) > 120) {
-
-            $offset = 119 - strlen($remainingString);
-
-            $splitSpaceOffset = strrpos($remainingString, '/', $offset);
-
-            $lines = substr_replace($remainingString, "'\n. '/", $splitSpaceOffset, 1);
-
-            list($trimedLine, $remainingString) = explode("\n", $lines);
-
-            $newString .= $trimedLine . "\n";
-
-            $remainingString = "        " . $remainingString;
-
-            if (strlen($remainingString) < 120) {
-                $newString .= $remainingString;
-            }
-        }
-
-        return $newString;
     }
 }
