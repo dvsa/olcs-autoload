@@ -51,6 +51,13 @@ class Autoloader
 
         $loader->register(true);
 
+        if (file_exists($vendorDir . '/composer/autoload_files.php')) {
+            $includeFiles = require $vendorDir . '/composer/autoload_files.php';
+            foreach ($includeFiles as $file) {
+                require($file);
+            }
+        }
+
         return $loader;
     }
 }
