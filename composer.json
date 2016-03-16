@@ -1,5 +1,14 @@
 {
     "name": "olcs/autoload",
     "description": "OLCS optimised autoloader",
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "url": "http://satis.inf.mgt.mtpdvsa",
+            "type": "composer"
+        }
+    ],
     "bin": ["bin/autoload"]
 }
