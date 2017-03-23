@@ -10,5 +10,8 @@
             "type": "composer"
         }
     ],
-    "bin": ["bin/autoload"]
+    "bin": ["bin/autoload"],
+    "config": {
+        "secure-http": false
+    }
 }
